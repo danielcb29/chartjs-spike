@@ -146,6 +146,14 @@ const doughnutData = {
 };
 
 const doughnutOptions = {
+  layout: {
+    padding: {
+      left: 250,
+      right: 250,
+      top: 100,
+      bottom: 100
+    }
+  },
   legend: {
     position: 'right',
     fullWidth: false
@@ -153,6 +161,7 @@ const doughnutOptions = {
   tooltips: {
     enabled: false
   },
+  cutoutPercentage: 40
 };
 
 const doughnutInstance = new Chart(doughnutChart, {
