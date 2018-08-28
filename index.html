@@ -1,5 +1,7 @@
 <html>
-    <head></head>
+    <head>
+        <link rel="stylesheet" href="./style.css">
+    </head>
     <body>
         <div class="charts">
             <div class="charts__bar">
@@ -14,9 +16,14 @@
                 <h1>Doughnut Chart</h1>
                 <canvas id="doughnutchart"></canvas>
             </div>
+
+            <div class="charts__doughnut">
+                <h1>Doughnut Chart Mobile</h1>
+                <canvas id="doughnutchart-mobile"></canvas>
+            </div>
         </div>
 
-        <script src="./node_modules/chart.js/dist/Chart.js"></script>
+        <script src="./Chart.bundle.js"></script>
         <script src="./index.js"></script>
     </body>
 </html>

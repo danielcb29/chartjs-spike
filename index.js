@@ -4,10 +4,14 @@
  * https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
  */
 
-const basicBarChart = document.getElementById('barchart-basic');
-const completeBarChart = document.getElementById('barchart-complete');
+const basicBarChart = document.getElementById('barchart-basic').getContext('2d');
+const completeBarChart = document.getElementById('barchart-complete').getContext('2d');
 
-const doughnutChart = document.getElementById('doughnutchart');
+const doughnutChart = document.getElementById('doughnutchart').getContext('2d');
+const doughnutChartMobile = document.getElementById('doughnutchart-mobile').getContext('2d');
+
+// Global default setup
+Chart.defaults.global.legend.labels.usePointStyle = true;
 
 // Basic Bar Chart
 const basicBarData = {
@@ -86,8 +90,8 @@ const completeBarData = {
 
 const completeBarOptions = {
   legend: {
-    position: 'top',
-    fullWidth: false
+    display: true,
+    position: 'top'
   },
   tooltips: {
     mode: 'index',
@@ -126,11 +130,13 @@ const completeBarOptions = {
   }
 };
 
-new Chart(completeBarChart, {
+const completeBarInstance = new Chart(completeBarChart, {
   type: 'bar',
   data: completeBarData,
   options: completeBarOptions
 });
+
+completeBarInstance.legend
 
 // Doughnut Chart
 
@@ -149,14 +155,14 @@ const doughnutOptions = {
   layout: {
     padding: {
       left: 250,
-      right: 250,
+      right: 150,
       top: 100,
       bottom: 100
     }
   },
   legend: {
     position: 'right',
-    fullWidth: false
+    fullWidth: false,
   },
   tooltips: {
     enabled: false
@@ -164,8 +170,17 @@ const doughnutOptions = {
   cutoutPercentage: 40
 };
 
-const doughnutInstance = new Chart(doughnutChart, {
+new Chart(doughnutChart, {
   type: 'doughnut',
   data: doughnutData,
   options: doughnutOptions
 });
+
+const doughnutMobileInstance = new Chart(doughnutChartMobile, {
+  type: 'doughnut',
+  data: doughnutData,
+  options: doughnutOptions
+});
+
+doughnutMobileInstance.options.legend.position = 'bottom';
+doughnutMobileInstance.update();
