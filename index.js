@@ -26,14 +26,6 @@ const basicBarData = {
 };
 
 const basicBarOptions = {
-  layout: {
-    padding: {
-      left: 250,
-      right: 250,
-      top: 100,
-      bottom: 100
-    }
-  },
   legend: {
     display: false
   },
@@ -104,14 +96,6 @@ const completeBarOptions = {
     bodySpacing: 12,
     titleMarginBottom: 15
   },
-  layout: {
-    padding: {
-      left: 250,
-      right: 250,
-      top: 100,
-      bottom: 100
-    }
-  },
   scales: {
     yAxes: [ { ticks: { beginAtZero: true } } ],
     xAxes: [
@@ -130,20 +114,18 @@ const completeBarOptions = {
   }
 };
 
-const completeBarInstance = new Chart(completeBarChart, {
+new Chart(completeBarChart, {
   type: 'bar',
   data: completeBarData,
   options: completeBarOptions
 });
-
-completeBarInstance.legend
 
 // Doughnut Chart
 
 const doughnutData = {
   datasets: [
     {
-      data: [ 10, 20, 30, 40, 50 ],
+      data: [ 10, 50, 60, 90, 95 ],
       backgroundColor: [ '#FFC832', '#503291', '#EB3C96', '#0F69AF', '#96D7D2' ],
       borderWidth: [ 0, 0, 0, 0, 0 ]
     }
@@ -152,17 +134,9 @@ const doughnutData = {
 };
 
 const doughnutOptions = {
-  layout: {
-    padding: {
-      left: 250,
-      right: 150,
-      top: 100,
-      bottom: 100
-    }
-  },
   legend: {
     position: 'right',
-    fullWidth: false,
+    fullWidth: false
   },
   tooltips: {
     enabled: false
@@ -170,10 +144,46 @@ const doughnutOptions = {
   cutoutPercentage: 40
 };
 
+// Define a plugin to provide data labels
+const pieLabelingPlugin = {
+  id: 'pieLabeling',
+  afterDatasetsDraw: chart => {
+    const ctx = chart.ctx;
+
+    chart.data.datasets.forEach((dataset, i) => {
+      const meta = chart.getDatasetMeta(i);
+      if (!meta.hidden) {
+        const sumData = meta.total;
+        meta.data.forEach((element, index) => {
+          ctx.fillStyle = '#ffff';
+          const fontSize = 24;
+          const fontStyle = 'normal';
+          const fontFamily = 'Helvetica Neue';
+          ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+          // Get the doughnut percentage value
+          const currentValue = dataset.data[index];
+          const percentage = parseFloat((currentValue/sumData*100).toFixed(1));
+          const dataString = `${percentage}%`;
+
+          // Make sure alignment settings are correct
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          const padding = 5;
+          const position = element.tooltipPosition();
+          ctx.fillText(dataString, position.x, position.y - fontSize / 2 - padding);
+        });
+      }
+    });
+  }
+};
+
 new Chart(doughnutChart, {
   type: 'doughnut',
   data: doughnutData,
-  options: doughnutOptions
+  options: doughnutOptions,
+  plugins: [ pieLabelingPlugin ]
 });
 
 const doughnutMobileInstance = new Chart(doughnutChartMobile, {
