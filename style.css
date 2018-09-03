@@ -1,0 +1,10 @@
+.charts__doughnut {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.doughnut-mobile{
+    width: 100%;
+    height: 100%;
+}

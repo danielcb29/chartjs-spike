@@ -149,12 +149,12 @@ const pieLabelingPlugin = {
   id: 'pieLabeling',
   afterDatasetsDraw: chart => {
     const ctx = chart.ctx;
-    const [dataset, i=0] = chart.data.datasets; // We always have 1 dataset because is a doughnut chart 
+    const [ dataset, i = 0 ] = chart.data.datasets; // We always have 1 dataset because is a doughnut chart
     const meta = chart.getDatasetMeta(i);
     const sumData = meta.total;
     // Doughnut Font Setup
     ctx.fillStyle = '#ffff';
-    const fontSize = 24;
+    const fontSize = 16;
     const fontStyle = 'normal';
     const fontFamily = 'Helvetica Neue';
     ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
@@ -162,34 +162,36 @@ const pieLabelingPlugin = {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const padding = 5;
-    
-    meta.data.forEach((element, index) => {
 
+    meta.data.forEach((element, index) => {
       // Get the doughnut percentage value
       const currentValue = dataset.data[index];
-      const percentage = parseFloat((currentValue/sumData*100).toFixed(1));
+      const percentage = parseFloat((currentValue / sumData * 100).toFixed(1));
       const dataString = `${percentage}%`;
 
       const position = element.tooltipPosition();
-      if(!element.hidden) {
+      if (!element.hidden) {
         ctx.fillText(dataString, position.x, position.y - fontSize / 2 - padding);
       }
     });
   }
 };
 
-new Chart(doughnutChart, {
+const doughnutInstance = new Chart(doughnutChart, {
   type: 'doughnut',
   data: doughnutData,
-  options: doughnutOptions,
+  options: { ...doughnutOptions },
   plugins: [ pieLabelingPlugin ]
 });
+
+// document.getElementById('right-legend').innerHTML = doughnutInstance.generateLegend();
 
 const doughnutMobileInstance = new Chart(doughnutChartMobile, {
   type: 'doughnut',
   data: doughnutData,
-  options: doughnutOptions
+  options: { ...doughnutOptions, legend: { display: false } }
 });
 
 doughnutMobileInstance.options.legend.position = 'bottom';
 doughnutMobileInstance.update();
+document.getElementById('bottom-legend').innerHTML = doughnutMobileInstance.generateLegend();
