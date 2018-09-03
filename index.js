@@ -149,31 +149,30 @@ const pieLabelingPlugin = {
   id: 'pieLabeling',
   afterDatasetsDraw: chart => {
     const ctx = chart.ctx;
+    const [dataset, i=0] = chart.data.datasets; // We always have 1 dataset because is a doughnut chart 
+    const meta = chart.getDatasetMeta(i);
+    const sumData = meta.total;
+    // Doughnut Font Setup
+    ctx.fillStyle = '#ffff';
+    const fontSize = 24;
+    const fontStyle = 'normal';
+    const fontFamily = 'Helvetica Neue';
+    ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+    // Make sure alignment settings are correct
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const padding = 5;
+    
+    meta.data.forEach((element, index) => {
 
-    chart.data.datasets.forEach((dataset, i) => {
-      const meta = chart.getDatasetMeta(i);
-      if (!meta.hidden) {
-        const sumData = meta.total;
-        meta.data.forEach((element, index) => {
-          ctx.fillStyle = '#ffff';
-          const fontSize = 24;
-          const fontStyle = 'normal';
-          const fontFamily = 'Helvetica Neue';
-          ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+      // Get the doughnut percentage value
+      const currentValue = dataset.data[index];
+      const percentage = parseFloat((currentValue/sumData*100).toFixed(1));
+      const dataString = `${percentage}%`;
 
-          // Get the doughnut percentage value
-          const currentValue = dataset.data[index];
-          const percentage = parseFloat((currentValue/sumData*100).toFixed(1));
-          const dataString = `${percentage}%`;
-
-          // Make sure alignment settings are correct
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-
-          const padding = 5;
-          const position = element.tooltipPosition();
-          ctx.fillText(dataString, position.x, position.y - fontSize / 2 - padding);
-        });
+      const position = element.tooltipPosition();
+      if(!element.hidden) {
+        ctx.fillText(dataString, position.x, position.y - fontSize / 2 - padding);
       }
     });
   }
